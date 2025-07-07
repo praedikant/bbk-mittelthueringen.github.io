@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bbk-mittelthueringen - Biker-Bibel-Kreis Mittelthüringen</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 2px solid #ff6b35;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 20px;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ff6b35;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo::before {
+            content: "🏍️";
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #ff6b35;
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            background: none;
+            border: none;
+            color: #e0e0e0;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), 
+                        url('biker-photo.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+        
+        /* Fallback für den Fall, dass das Biker-Foto nicht lädt */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff6b35, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #ccc;
+        }
+
+        .verse {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: #ffd700;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-left: 3px solid #ff6b35;
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 5px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b35, #ff8c42);
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        /* Main Content */
+        main {
+            padding: 4rem 0;
+        }
+
+        .section {
+            display: none;
+            margin-bottom: 4rem;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #ff6b35;
+            text-align: center;
+        }
+
+        .section h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+
+        .section p {
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #ff6b35;
+        }
+
+        .card h3 {
+            color: #ff6b35;
+            margin-bottom: 1rem;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 2px solid #ff6b35;
+        }
+
+        footer p {
+            color: #888;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(0, 0, 0, 0.95);
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">bbk-mittelthueringen</a>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#termine" class="nav-link">Termine</a></li>
+                <li><a href="#archiv" class="nav-link">Archiv</a></li>
+                <li><a href="#galerie" class="nav-link">Galerie</a></li>
+                <li><a href="#kontakt" class="nav-link">Kontakt</a></li>
+            </ul>
+            <button class="mobile-menu">☰</button>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>bbk-mittelthueringen</h1>
+            <p>Biker-Bibel-Kreis Mittelthüringen - Wo sich Biker treffen, um Gottes Wort zu entdecken</p>
+            <div class="verse">
+                "Denn wo zwei oder drei in meinem Namen versammelt sind, da bin ich mitten unter ihnen."<br>
+                <small>- Matthäus 18,20</small>
+            </div>
+            <a href="#termine" class="cta-button nav-link">Nächste Termine</a>
+        </div>
+    </section>
+
+    <main class="container">
+        <section id="termine" class="section">
+            <h2>Nächste Termine</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>🏍️ Wöchentlicher Bibelkreis</h3>
+                    <p><strong>Jeden Donnerstag, 19:30 Uhr</strong></p>
+                    <p>Gemeinschaftsraum der Christuskirche<br>
+                    Hauptstraße 42, 12345 Musterstadt</p>
+                    <p>Wir studieren gemeinsam die Bibel und teilen unsere Erfahrungen als Biker und Christen.</p>
+                </div>
+                <div class="card">
+                    <h3>⛪ Gottesdienst-Ausfahrt</h3>
+                    <p><strong>Sonntag, 14. Juli 2025, 9:00 Uhr</strong></p>
+                    <p>Treffpunkt: Parkplatz Tankstelle Shell<br>
+                    Bundesstraße 1, 12345 Musterstadt</p>
+                    <p>Gemeinsame Ausfahrt zum Bergkirchengottesdienst mit anschließendem Grillen.</p>
+                </div>
+                <div class="card">
+                    <h3>🏕️ Biker-Wochenende</h3>
+                    <p><strong>25.-27. Juli 2025</strong></p>
+                    <p>Campingplatz "Zur Ruhe"<br>
+                    Bergweg 15, 54321 Naturhausen</p>
+                    <p>Wochenende mit Andachten, Gemeinschaft und gemeinsamen Touren durch die Berge.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="archiv" class="section">
+            <h2>Archiv</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>Pfingst-Ausfahrt 2025</h3>
+                    <p>Eine unvergessliche Reise durch das Rheinland mit 15 Bikern. Höhepunkt war der Gottesdienst am Rheinufer.</p>
+                </div>
+                <div class="card">
+                    <h3>Taufe am Bergsee</h3>
+                    <p>Drei Mitglieder ließen sich am idyllischen Bergsee taufen - ein bewegender Moment für alle Anwesenden.</p>
+                </div>
+                <div class="card">
+                    <h3>Charity-Ride für Waisenkinder</h3>
+                    <p>Gemeinsam sammelten wir 3.500€ für das örtliche Waisenhaus. Gott segne alle Spender!</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="galerie" class="section">
+            <h2>Galerie</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>📸 Fotos folgen bald</h3>
+                    <p>Hier werden wir bald Bilder von unseren Ausfahrten, Gottesdiensten und gemeinsamen Erlebnissen teilen.</p>
+                </div>
+                <div class="card">
+                    <h3>🎥 Videos</h3>
+                    <p>Erlebnisberichte und Zeugnisse unserer Mitglieder werden hier verfügbar sein.</p>
+                </div>
+                <div class="card">
+                    <h3>📖 Bibelverse</h3>
+                    <p>Unsere Lieblingsverse und Andachten, die uns auf unseren Fahrten begleiten.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="kontakt" class="section">
+            <h2>Kontakt</h2>
+            <div class="contact-form">
+                <form>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-Mail</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bike">Motorrad (optional)</label>
+                        <input type="text" id="bike" name="bike" placeholder="z.B. Harley Davidson Street Glide">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Nachricht</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="cta-button">Nachricht senden</button>
+                </form>
+            </div>
+            <div style="text-align: center; margin-top: 3rem;">
+                <h3>Oder komm einfach vorbei!</h3>
+                <p>Jeden Donnerstag ab 19:30 Uhr<br>
+                Christuskirche, Hauptstraße 42<br>
+                12345 Musterstadt</p>
+                <p>📧 info@asphaltandacht.de<br>
+                📱 +49 (0) 123 456789</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 bbk-mittelthueringen - Biker-Bibel-Kreis Mittelthüringen. Alle Rechte vorbehalten.</p>
+            <p>Gott segne dich und behüte dich auf all deinen Wegen.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation functionality
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.section');
+        const heroSection = document.getElementById('home');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const navLinksContainer = document.querySelector('.nav-links');
+
+        // Mobile menu toggle
+        mobileMenu.addEventListener('click', () => {
+            navLinksContainer.classList.toggle('active');
+        });
+
+        // Navigation click handlers
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                navLinks.forEach(l => l.classList.remove('active'));
+                
+                // Add active class to clicked link
+                link.classList.add('active');
+                
+                // Hide mobile menu
+                navLinksContainer.classList.remove('active');
+                
+                // Get target section
+                const targetId = link.getAttribute('href').substring(1);
+                
+                if (targetId === 'home') {
+                    // Show hero section
+                    heroSection.style.display = 'flex';
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+                } else {
+                    // Hide hero section
+                    heroSection.style.display = 'none';
+                    
+                    // Show target section
+                    sections.forEach(section => {
+                        if (section.id === targetId) {
+                            section.classList.add('active');
+                        } else {
+                            section.classList.remove('active');
+                        }
+                    });
+                }
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
+            });
+        });
+
+        // Form submission
+        const form = document.querySelector('form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Vielen Dank für deine Nachricht! Wir melden uns bald bei dir.');
+            form.reset();
+        });
+
+        // Smooth scrolling for CTA button
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctaButton = document.querySelector('.cta-button');
+            ctaButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Trigger termine navigation
+                const termineLink = document.querySelector('a[href="#termine"]');
+                termineLink.click();
+            });
+        });
+    </script>
+</body>
+</html>
